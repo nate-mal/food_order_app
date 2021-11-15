@@ -8,7 +8,7 @@ import CartContext from "../Context/cart-context";
 const AvailableMeals = (props) => {
   const ctxCart = useContext(CartContext);
   const updateCart = (getItem) => {
-    const addMeal = DUMMY_MEALS.filter((meal) => meal.id == getItem.id)[0];
+    const addMeal = DUMMY_MEALS.filter((meal) => meal.id === getItem.id)[0];
     const amount = +getItem.amount;
     console.log(getItem.id);
     console.log(addMeal);

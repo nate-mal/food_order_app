@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import AvailableMeals from "./components/Meals/AvailableMeals";

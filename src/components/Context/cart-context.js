@@ -41,7 +41,7 @@ const reducer = (state, action) => {
         } else return cartItem;
       })
       .filter((cartItem) => {
-        return cartItem != "removed";
+        return cartItem !== "removed";
       });
     console.log(updatedState);
     return updatedState;
@@ -52,8 +52,7 @@ export const CartContextProvider = (props) => {
   const [showCart, setShowCart] = useState(false);
 
   const showCartHandler = () => {
-    if (showCart) setShowCart(false);
-    else setShowCart(true);
+    setShowCart((prevState) => !prevState);
   };
 
   const getCartSize = () => {
