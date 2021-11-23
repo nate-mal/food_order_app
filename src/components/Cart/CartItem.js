@@ -4,11 +4,30 @@ import CartContext from "../Context/cart-context";
 const CartItem = (props) => {
   const ctxCart = useContext(CartContext);
   const price = `$${props.price.toFixed(2)}`;
-  const increaseAmountHandler = () => {
-    ctxCart.updateCart("IN/DECREASE_AMOUNT", { id: props.id, amount: +1 });
-  };
-  const decreaseAmountHandler = () => {
-    ctxCart.updateCart("IN/DECREASE_AMOUNT", { id: props.id, amount: -1 });
+
+  const updateItemHandler = () => {
+    const updateAmount = (amount) => {
+      ctxCart.updateCart("IN/DECREASE_AMOUNT", {
+        id: props.id,
+        amount: amount,
+      });
+    };
+    const removeItem = () => {
+      ctxCart.updateCart("REMOVE", {
+        id: props.id,
+      });
+    };
+    return {
+      increment: () => {
+        updateAmount(1);
+      },
+      decrement: () => {
+        updateAmount(-1);
+      },
+      remove: () => {
+        removeItem();
+      },
+    };
   };
   return (
     <li className={classes["cart-item"]}>
@@ -20,8 +39,9 @@ const CartItem = (props) => {
         </div>
       </div>
       <div className={classes.actions}>
-        <button onClick={decreaseAmountHandler}>−</button>
-        <button onClick={increaseAmountHandler}>+</button>
+        <button onClick={updateItemHandler().decrement}>−</button>
+        <button onClick={updateItemHandler().increment}>+</button>
+        <button onClick={updateItemHandler().remove}>X</button>
       </div>
     </li>
   );

@@ -45,6 +45,10 @@ const reducer = (state, action) => {
       });
     console.log(updatedState);
     return updatedState;
+  } else if (action.type === "REMOVE") {
+    return state.filter((cartItem) => {
+      return cartItem.item.id !== action.value.id;
+    });
   }
 };
 export const CartContextProvider = (props) => {
