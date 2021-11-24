@@ -3,7 +3,7 @@ import styles from "./MealItem.module.css";
 import MealItemForm from "./MealItemForm";
 const MealItem = (props) => {
   const AddToCartHandler = (amount) => {
-    props.onAddToCart({ id: props.id, amount: amount });
+    props.onAddToCart({ meal: props.meal, amount: amount });
   };
 
   return (

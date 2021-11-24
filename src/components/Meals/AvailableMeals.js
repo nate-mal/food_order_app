@@ -1,38 +1,68 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useCallback, useState } from "react";
 import styles from "./AvailableMeals.module.css";
 import Card from "../UI/Card/Card";
 import MealsSummary from "./MealsSummary";
 import MealItem from "./MealItem";
-import { DUMMY_MEALS } from "./dummy-meals";
 import CartContext from "../Context/cart-context";
+import useHttp from "../../hooks/use-http";
 const AvailableMeals = (props) => {
+  const [meals, setMeals] = useState();
+  const extractMeals = (data) => {
+    let mealsData = [];
+    for (const mealKey in data) {
+      mealsData.push({
+        id: mealKey,
+        name: data[mealKey].name,
+        description: data[mealKey].description,
+        price: data[mealKey].price,
+      });
+    }
+    console.log(mealsData);
+    setMeals(mealsData);
+    return mealsData;
+  };
+
+  const { isLoading, error, sendRequest } = useHttp(
+    "https://react-http-97ff1-default-rtdb.firebaseio.com/meals.json"
+  );
+  useEffect(() => {
+    sendRequest(undefined, extractMeals);
+  }, []);
+
   const ctxCart = useContext(CartContext);
   const updateCart = (getItem) => {
-    const addMeal = DUMMY_MEALS.filter((meal) => meal.id === getItem.id)[0];
-    const amount = +getItem.amount;
-    console.log(getItem.id);
-    console.log(addMeal);
-    const mealObj = { item: addMeal, amount: amount };
-    console.log(mealObj);
-    ctxCart.updateCart("ADD", mealObj);
+    const objMeal = { item: getItem.meal, amount: +getItem.amount };
+    ctxCart.updateCart("ADD", objMeal);
   };
+
   return (
     <>
       <MealsSummary></MealsSummary>
       <Card className={styles.meals}>
         <ul>
-          {DUMMY_MEALS.map((meal) => {
-            return (
-              <MealItem
-                onAddToCart={updateCart}
-                key={meal.id}
-                id={meal.id}
-                name={meal.name}
-                description={meal.description}
-                price={meal.price}
-              />
-            );
-          })}
+          {meals ? (
+            meals.map((meal) => {
+              return (
+                <MealItem
+                  onAddToCart={updateCart}
+                  key={meal.id}
+                  id={meal.id}
+                  name={meal.name}
+                  description={meal.description}
+                  price={meal.price}
+                  meal={meal}
+                />
+              );
+            })
+          ) : (
+            <p>The menu list is empty</p>
+          )}
+          {isLoading && <p className={styles.center}>Is loading...</p>}
+          {error && (
+            <p className={styles["text-error"]}>
+              Somthing went wrong when fethcing the data: {error}
+            </p>
+          )}
         </ul>
       </Card>
     </>

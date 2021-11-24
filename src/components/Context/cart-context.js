@@ -27,14 +27,10 @@ const reducer = (state, action) => {
     if (alreadyinCart) return updatedState;
     else return [...state, action.value];
   } else if (action.type === "IN/DECREASE_AMOUNT") {
-    console.log("update");
-    console.log(action.value.id);
-    console.log(action.value.amount);
     const updatedState = state
       .map((cartItem, key, state) => {
         if (cartItem.item.id === action.value.id) {
           const updatedAmount = cartItem.amount + action.value.amount;
-          console.log(updatedAmount);
           if (updatedAmount > 0)
             return { item: cartItem.item, amount: updatedAmount };
           else return "removed";
@@ -43,7 +39,6 @@ const reducer = (state, action) => {
       .filter((cartItem) => {
         return cartItem !== "removed";
       });
-    console.log(updatedState);
     return updatedState;
   } else if (action.type === "REMOVE") {
     return state.filter((cartItem) => {
