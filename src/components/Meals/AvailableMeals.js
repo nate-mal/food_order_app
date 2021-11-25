@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./AvailableMeals.module.css";
 import Card from "../UI/Card/Card";
 import MealsSummary from "./MealsSummary";
@@ -37,10 +37,10 @@ const AvailableMeals = (props) => {
 
   return (
     <>
-      <MealsSummary></MealsSummary>
+      <MealsSummary />
       <Card className={styles.meals}>
         <ul>
-          {meals ? (
+          {meals &&
             meals.map((meal) => {
               return (
                 <MealItem
@@ -53,14 +53,12 @@ const AvailableMeals = (props) => {
                   meal={meal}
                 />
               );
-            })
-          ) : (
-            <p>The menu list is empty</p>
-          )}
+            })}
+          {!meals && !isLoading && !error && <p>The menu list is empty</p>}
           {isLoading && <p className={styles.center}>Is loading...</p>}
           {error && (
             <p className={styles["text-error"]}>
-              Somthing went wrong when fethcing the data: {error}
+              Something went wrong when fetching the data: {error}
             </p>
           )}
         </ul>

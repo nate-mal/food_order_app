@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styles from "./Cart.module.css";
 import Card from "../UI/Card/Card";
 import Modal from "../UI/Modal/Modal";
 import CartItem from "./CartItem";
 import CartContext from "../Context/cart-context";
+import Checkout from "./Checkout";
 const Cart = (props) => {
   const ctxCart = useContext(CartContext);
-
+  const [showCheckout, setShowCheckout] = useState(false);
   const getCartItems = () => {
     return (
       <>
@@ -38,6 +39,7 @@ const Cart = (props) => {
           <button
             onClick={() => {
               console.log("Ordering...");
+              setShowCheckout(true);
             }}
             type="button"
             className={styles.button}
@@ -49,21 +51,30 @@ const Cart = (props) => {
     );
   };
   return (
-    <Modal onBlur={ctxCart.showCart.function}>
-      <Card className={styles.cart}>
-        <ul className={styles["cart-items"]}>
-          {ctxCart.cartContent.length > 0 ? (
-            getCartItems()
-          ) : (
-            <h1 className={styles.empty__message}>Your cart is empty!</h1>
-          )}
-        </ul>
-        <h1 className={styles.total}>{`Total: ${ctxCart.cartCost.toFixed(
-          2
-        )}`}</h1>
-        {getActions()}
-      </Card>
-    </Modal>
+    <>
+      <Modal onBlur={ctxCart.showCart.function}>
+        <Card className={styles.cart}>
+          <ul className={styles["cart-items"]}>
+            {ctxCart.cartContent.length > 0 ? (
+              getCartItems()
+            ) : (
+              <h1 className={styles.empty__message}>Your cart is empty!</h1>
+            )}
+          </ul>
+          <h1 className={styles.total}>{`Total: ${ctxCart.cartCost.toFixed(
+            2
+          )}`}</h1>
+          {getActions()}
+        </Card>
+      </Modal>
+      {showCheckout && (
+        <Checkout
+          onBlur={() => {
+            setShowCheckout(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 
